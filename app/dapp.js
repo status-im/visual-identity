@@ -9,6 +9,7 @@ import DrawField from './components/draw/DrawField';
 import ContractClient from './client_contractgo';
 import Events from './chain_client/events';
 import Toaster from './components/toaster';
+import DrawingCanvas from './components/draw/DrawingCanvas';
 window['SNT'] = SNT;
 
 import './dapp.css';
@@ -99,7 +100,8 @@ class App extends React.Component {
     const { web3Provider, loading, canvasState, validationToast } = this.state;
     return (
       <Web3Render ready={web3Provider}>
-        <DrawField setTileMapState={setTileMapState} canvasState={canvasState} />
+        <DrawingCanvas />
+        {/* <DrawField setTileMapState={setTileMapState} canvasState={canvasState} /> */}
         <Toaster open={validationToast} handleClose={closeValidationToast}/>
       </Web3Render>
     );
