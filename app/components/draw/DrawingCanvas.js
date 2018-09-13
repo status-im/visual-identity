@@ -1,7 +1,7 @@
 import React, { PureComponent, Fragment } from 'react';
 import { CirclePicker } from 'react-color';
 import CanvasDraw from "react-canvas-draw";
-import { Toolbar } from '@material-ui/core';
+import { AppBar, Toolbar } from '@material-ui/core';
 
 
 class DrawingCanvas extends PureComponent {
@@ -18,7 +18,11 @@ class DrawingCanvas extends PureComponent {
     const { canvasWidth, canvasHeight, brushSize, brushColor } = this.state;
     return (
       <Fragment>
+        <AppBar>
+          <Toolbar></Toolbar>
+        </AppBar>
         <CanvasDraw
+          style={{ marginTop: '20%' }}
           canvasWidth={canvasWidth}
           canvasHeight={canvasHeight}
           brushSize={brushSize}
