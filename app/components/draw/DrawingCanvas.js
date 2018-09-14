@@ -4,6 +4,19 @@ import CanvasDraw from './CanvasDraw';
 import { AppBar, Toolbar, IconButton, Button } from '@material-ui/core';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 
+function range(start, end) {
+  if(start === end) return [start];
+  return [start, ...range(start + 1, end)];
+}
+
+function getPixels (lineCoordinates) {
+  const { startX, startY, endX, endY } = lineCoordinates;
+  const { floor } = Math;
+  const xRange = range(floor(startX), floor(endX));
+  const yRange = range(floor(startY), floor(endY))
+  //Needs to be flattened
+  return xRange.map(xCoordinate => yRange.map(yCoordinate => [xCoordinate, yCoordinate]));
+}
 
 class DrawingCanvas extends PureComponent {
   state = {
@@ -23,6 +36,7 @@ class DrawingCanvas extends PureComponent {
       canvasHeight: canvasHeight * 1.25,
       canvasState
     })
+    console.log({canvasState}, getPixels(canvasState.linesArray[0]))
     this.loadState(canvasState);
   }
 
@@ -35,7 +49,7 @@ class DrawingCanvas extends PureComponent {
     const { canvasWidth, canvasHeight, brushSize, brushColor } = this.state;
     return (
       <Fragment>
-        <AppBar>
+        <AppBar position="static" color="default">
           <Toolbar>
             <IconButton
               ref='zoom1'
@@ -46,7 +60,7 @@ class DrawingCanvas extends PureComponent {
           </Toolbar>
         </AppBar>
         <CanvasDraw
-          style={{ marginTop: '20%' }}
+          style={{ borderStyle: 'groove' }}
           ref={canvasDraw => (this.saveableCanvas = canvasDraw)}
           canvasWidth={canvasWidth}
           canvasHeight={canvasHeight}
