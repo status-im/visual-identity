@@ -46,7 +46,7 @@ class DrawingCanvas extends PureComponent {
 
   loadState = data => {
     const { canvasState } = this.state;
-    this.saveableCanvas.loadSaveData(data || canvasState, true);
+    this.saveableCanvas.loadSaveData(data || canvasState, false);
   }
 
   render() {

@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 export default class extends Component {
   static defaultProps = {
-    loadTimeOffset: 5,
+    loadTimeOffset: 1,
     brushSize: 6,
     brushColor: "#444",
     canvasWidth: 400,
