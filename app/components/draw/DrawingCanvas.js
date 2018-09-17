@@ -21,6 +21,17 @@ function getPixels (lineCoordinates) {
 }
 
 const addPlots = linesArray => linesArray.map(line => ({ ...line, plots: getPixels(line)}));
+const getCost = (plottedArray, amount) => {
+  return plottedArray.reduce((pv, line) => {
+    const { plots } = line;
+    const lineValue = plots.reduce((pv, cv) => {
+      //TODO will have to check price of pixel and see if amount is greater.
+      const [x , y] = cv;
+      return pv + amount;
+    }, 0);
+    return pv + lineValue;
+  }, 0)
+}
 
 class DrawingCanvas extends PureComponent {
   state = {
@@ -49,6 +60,12 @@ class DrawingCanvas extends PureComponent {
     this.saveableCanvas.loadSaveData(data || canvasState, false);
   }
 
+  calculateCost = () => {
+    //assume 1 SNT per pixel for now
+    const canvasState = this.saveableCanvas.getSaveData();
+    console.log('pixel cost:', getCost(addPlots(canvasState.linesArray), 1))
+  }
+
   render() {
     const { canvasWidth, canvasHeight, brushSize, brushColor } = this.state;
     return (
@@ -60,7 +77,7 @@ class DrawingCanvas extends PureComponent {
               onClick={this.zoomOut}>
               <ZoomOutIcon/>
             </IconButton>
-            <Button variant="outlined" color="primary" onClick={this.loadState}>Submit</Button>
+            <Button variant="outlined" color="primary" onClick={this.calculateCost}>Submit</Button>
           </Toolbar>
         </AppBar>
         <CanvasDraw
