@@ -2,6 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { CirclePicker } from 'react-color';
 import CanvasDraw from './CanvasDraw';
 import { AppBar, Toolbar, IconButton, Button } from '@material-ui/core';
+import { flatten } from 'lodash';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 
 function range(start, end) {
@@ -14,8 +15,7 @@ function getPixels (lineCoordinates) {
   const { floor } = Math;
   const xRange = range(floor(startX), floor(endX));
   const yRange = range(floor(startY), floor(endY))
-  //Needs to be flattened
-  return xRange.map(xCoordinate => yRange.map(yCoordinate => [xCoordinate, yCoordinate]));
+  return flatten(xRange.map(xCoordinate => yRange.map(yCoordinate => [xCoordinate, yCoordinate])));
 }
 
 class DrawingCanvas extends PureComponent {
