@@ -5,18 +5,22 @@ import { AppBar, Toolbar, IconButton, Button } from '@material-ui/core';
 import { flatten } from 'lodash';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 
-function range(start, end) {
-  if(start === end) return [start];
-  return [start, ...range(start + 1, end)];
+function* range(start, end) {
+  const { min, max } = Math;
+  for (let i = min(start, end); i <= max(start, end); i++) {
+    yield i;
+  }
 }
 
 function getPixels (lineCoordinates) {
   const { startX, startY, endX, endY } = lineCoordinates;
   const { floor } = Math;
-  const xRange = range(floor(startX), floor(endX));
-  const yRange = range(floor(startY), floor(endY))
+  const xRange = [ ...range(floor(startX), floor(endX)) ];
+  const yRange = [ ...range(floor(startY), floor(endY)) ];
   return flatten(xRange.map(xCoordinate => yRange.map(yCoordinate => [xCoordinate, yCoordinate])));
 }
+
+const addPlots = linesArray => linesArray.map(line => ({ ...line, plots: getPixels(line)}));
 
 class DrawingCanvas extends PureComponent {
   state = {
@@ -36,7 +40,7 @@ class DrawingCanvas extends PureComponent {
       canvasHeight: canvasHeight * 1.25,
       canvasState
     })
-    console.log({canvasState}, getPixels(canvasState.linesArray[0]))
+    console.log({canvasState}, addPlots(canvasState.linesArray));
     this.loadState(canvasState);
   }
 
