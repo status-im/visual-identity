@@ -27,20 +27,11 @@
       "ProposalCuration": { "deploy": false },
       "Democracy": { "deploy": false },
       "TestToken": { "deploy": false },
-      "AddressUtils": { "deploy": false },
       "PollManager": { "deploy": false },
-      "ERC721BasicToken": { "deploy": false },
-      "ERC721Token": { "deploy": false },
       "RLP": { "deploy": false },
       "SparseMerkleTree": { "deploy": false },
-      "ECVerify": { "deploy": false },
-      "Transaction": { "deploy": false },
-      "ValidatorManagerContract": {},
-      "RootChain": {
-        "args": ["$ValidatorManagerContract"]
-      },
-      "CryptoCards":{
-        "args": ["$RootChain"]
+      "Canvas": {
+        "args": ["$SNT"]
       },
       "MiniMeTokenFactory": {
 
@@ -56,17 +47,8 @@
           "TST",
           true
         ]
-      },
-      "PlasmaERC20":{ "deploy": false },
-      "PlasmaSNT": {
-        "instanceOf": "PlasmaERC20",
-        "args": ["$RootChain", "$SNT", "PlasmaSNT", "PSNT"]
       }
-    },
-    "afterDeploy": [
-      "ValidatorManagerContract.methods.toggleToken('$CryptoCards').send()",
-      "PlasmaSNT.methods.setExchangeRate(0, 5000000000000000000).send()"
-    ]
+    }
   },
 
 
