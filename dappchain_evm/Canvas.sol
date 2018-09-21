@@ -5,15 +5,19 @@ import "../common/Controlled.sol";
 
 contract Canvas is Controlled {
 
-    struct Shape {
+    struct Line {
         bytes6 color;
-        // TODO: add missing properties
+        uint16 startX;
+        uint16 startY;
+        uint16 endX;
+        uint16 endY;
+        uint8 size;
     }
 
     struct Pixel {
         address owner;
         uint price;
-        uint shapeIndex;
+        uint lineIndex;
         uint lastPriceUpdate;
     }
 
@@ -22,7 +26,7 @@ contract Canvas is Controlled {
 
     Pixel[GRID_X][GRID_Y] public grid;
 
-    Shape[] public shapes;
+    Line[] public lines;
 
     ERC20Token public token;
 
@@ -68,7 +72,7 @@ contract Canvas is Controlled {
 
 
     /// @notice Draw a pixel. Will transfer the price of a pixel if owned, or will use the empty price
-    function draw(uint x, uint y, uint shapeIndex, uint priceIfEmpty) public {
+    function draw(uint x, uint y, uint lineIndex, uint priceIfEmpty) public {
         require(x < 350 && y < 350, "Invalid coordinate");
 
 
@@ -100,7 +104,7 @@ contract Canvas is Controlled {
 
         p.lastPriceUpdate = 0; // New owner can change the price now
         p.owner = msg.sender;
-        p.shapeIndex = shapeIndex;
+        p.lineIndex = lineIndex;
 
         playerPixelsX[msg.sender].push(x);
         playerPixelsY[msg.sender].push(y);
