@@ -20,11 +20,11 @@ function getPixels (lineCoordinates) {
   return flatten(xRange.map(xCoordinate => yRange.map(yCoordinate => [xCoordinate, yCoordinate])));
 }
 
-const addPlots = linesArray => linesArray.map(line => ({ ...line, plots: getPixels(line)}));
+const addPixels = linesArray => linesArray.map(line => ({ ...line, pixels: getPixels(line)}));
 const getCost = (plottedArray, amount) => {
   return plottedArray.reduce((pv, line) => {
-    const { plots } = line;
-    const lineValue = plots.reduce((pv, cv) => {
+    const { pixels } = line;
+    const lineValue = pixels.reduce((pv, cv) => {
       //TODO will have to check price of pixel and see if amount is greater.
       const [x , y] = cv;
       return pv + amount;
@@ -32,6 +32,15 @@ const getCost = (plottedArray, amount) => {
     return pv + lineValue;
   }, 0)
 }
+
+const pixelToLine = pixel => ({
+  color: '#FF0000',
+  startX: pixel[0],
+  endX: pixel[0],
+  startY: pixel[1],
+  endY: pixel[1],
+  size: 1
+});
 
 class DrawingCanvas extends PureComponent {
   state = {
@@ -51,7 +60,7 @@ class DrawingCanvas extends PureComponent {
       canvasHeight: canvasHeight * 1.25,
       canvasState
     })
-    console.log({canvasState}, addPlots(canvasState.linesArray));
+    console.log({canvasState}, addPixels(canvasState.linesArray));
     this.loadState(canvasState);
   }
 
@@ -63,11 +72,20 @@ class DrawingCanvas extends PureComponent {
   calculateCost = () => {
     //assume 1 SNT per pixel for now
     const canvasState = this.saveableCanvas.getSaveData();
-    console.log('pixel cost:', getCost(addPlots(canvasState.linesArray), 1))
+    console.log('pixel cost:', getCost(addPixels(canvasState.linesArray), 1))
+  }
+
+  drawPixels = () => {
+    const canvasState = this.saveableCanvas.getSaveData();
+    const pixels = flatten(canvasState.linesArray.map(getPixels));
+    const lines = pixels.map(pixelToLine);
+    console.log({canvasState, pixels, lines})
+    lines.forEach(line => this.saveableCanvas.drawLine(line));
   }
 
   render() {
     const { canvasWidth, canvasHeight, brushSize, brushColor } = this.state;
+    window.sCanvas = this.saveableCanvas;
     return (
       <Fragment>
         <AppBar position="static" color="default">
@@ -78,6 +96,7 @@ class DrawingCanvas extends PureComponent {
               <ZoomOutIcon/>
             </IconButton>
             <Button variant="outlined" color="primary" onClick={this.calculateCost}>Submit</Button>
+            <Button variant="outlined" color="primary" onClick={this.drawPixels}>Draw Pixels</Button>
           </Toolbar>
         </AppBar>
         <CanvasDraw
@@ -93,7 +112,7 @@ class DrawingCanvas extends PureComponent {
           onChange={(color) => this.setState({brushColor: color.hex})}/>
       </Fragment>
     )
-}
+  }
 }
 
 export default DrawingCanvas;
