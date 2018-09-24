@@ -7,10 +7,10 @@ contract Canvas is Controlled {
 
     struct Line {
         bytes6 color;
-        uint16 startX;
-        uint16 startY;
-        uint16 endX;
-        uint16 endY;
+        uint24 startX;
+        uint24 startY;
+        uint24 endX;
+        uint24 endY;
         uint8 size;
     }
 

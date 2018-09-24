@@ -76,10 +76,24 @@ class DrawingCanvas extends PureComponent {
   }
 
   drawPixels = () => {
+    // drawing pixels alone will not work since curved lines don't use the full pixel.
+    // when a user buys a pixel, a refernce should be stored to the lines in that pixel
+    // main structure can look like this [ [ [{pixel}, {line}, {line}] ] ]
+    // x y coordinates in line will be converted to wei and then back from wei for plotting
+    const count = {};
     const canvasState = this.saveableCanvas.getSaveData();
     const pixels = flatten(canvasState.linesArray.map(getPixels));
-    const lines = pixels.map(pixelToLine);
-    console.log({canvasState, pixels, lines})
+    const filteredPixels = pixels.map(pixel => {
+      if (!count[pixel]) {
+        count[pixel] = 1;
+        return pixel;
+      } else {
+        count[pixel]++
+        return false
+      }
+    }).filter(pixel => pixel != false);
+    const lines = filteredPixels.map(pixelToLine);
+    console.log({canvasState, pixels, lines, count, filteredPixels})
     lines.forEach(line => this.saveableCanvas.drawLine(line));
   }
 
