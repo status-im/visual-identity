@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+
+message Dummy {
+}
+
+message Funds {
+    uint64 amount = 1;
+}
