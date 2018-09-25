@@ -7,3 +7,10 @@ message Dummy {
 message Funds {
     uint64 amount = 1;
 }
+
+message Drawing {
+    uint64 x = 1;
+    uint64 y = 1;
+    uint64 shapeIndex = 1;
+    uint64 priceIfEmpty = 1;
+}

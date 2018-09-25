@@ -5,6 +5,7 @@ import (
 	"math/big"
 	"strconv"
 	"strings"
+	"errors"
 
 	"github.com/loomnetwork/go-loom/plugin"
 	contract "github.com/loomnetwork/go-loom/plugin/contractpb"
@@ -67,7 +68,7 @@ func (c *Canvas) AddFunds(ctx contractpb.Context, value *types.Funds) error {
 	}
 	value, err := strconv.ParseBool(evmOut)
 	if !value {
-		// TODO: throw error
+		return errors.New("Transfer failed")
 	}
 	// ****************************************************************
 
@@ -91,6 +92,42 @@ func (c *Canvas) AddFunds(ctx contractpb.Context, value *types.Funds) error {
 // TODO: withdrawFunds(uint amount) public
 
 // TODO: draw(uint x, uint y, uint shapeIndex, uint priceIfEmpty) public
+func (c *Canvas) AddFunds(ctx contractpb.Context, value *types.Drawing) error {
+{
+	// require(x < 350 && y < 350, "Invalid coordinate");
+	if value.X >= 350 || value.Y >= 350 {
+		return errors.New("Invalid coordinate")
+	}
+
+	senderAddr := []byte(ctx.Message().Sender.Local)  // msg.sender
+
+	
+
+//     Pixel storage p = grid[x][y];
+//     if(p.owner == msg.sender) return;
+//     if(p.owner == address(0)){
+//         // Empty pixel
+//         require(balances[msg.sender] >= priceIfEmpty, "Not enough balance. Add more funds");
+//         balances[msg.sender] -= priceIfEmpty;
+//         publicBalance += priceIfEmpty;
+//         p.price = priceIfEmpty;
+//     } else {
+//         // Pixel is owned
+//         require(balances[msg.sender] >= p.price, "Not enough balance. Add more funds");
+//         balances[msg.sender] -= p.price;
+//         balances[p.owner] += p.price;
+//         playerAmountToTax[p.owner] -= p.price;
+//     }
+//     p.lastPriceUpdate = 0; // New owner can change the price now
+//     p.owner = msg.sender;
+//     p.shapeIndex = shapeIndex;
+//     playerPixelsX[msg.sender].push(x);
+//     playerPixelsY[msg.sender].push(y);
+//     playerAmountToTax[msg.sender] += p.price;
+//     emit PixelDrawn(msg.sender, x, y, p.price);
+// }
+
+}
 
 // TODO: leaveTheGame() public
 

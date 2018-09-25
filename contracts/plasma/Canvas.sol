@@ -20,7 +20,7 @@ contract Canvas is Controlled {
     uint public constant GRID_X = 5;
     uint public constant GRID_Y = 5;
 
-    Pixel[GRID_X][GRID_Y] public grid;
+    mapping(bytes32 => Pixel) public grid;
 
     Shape[] public shapes;
 
@@ -34,8 +34,7 @@ contract Canvas is Controlled {
 
     mapping(address => uint) public playerIndex;
     mapping(address => uint) public playerAmountToTax;
-    mapping(address => uint[]) public playerPixelsX;
-    mapping(address => uint[]) public playerPixelsY;
+    mapping(address => bytes32[]) public playerPixels;
 
 
 
@@ -73,56 +72,46 @@ contract Canvas is Controlled {
     }
 
 
-    /// @notice Draw a pixel. Will transfer the price of a pixel if owned, or will use the empty price
-    function draw(uint x, uint y, uint shapeIndex, uint priceIfEmpty) public {
-        require(x < 350 && y < 350, "Invalid coordinate");
-    
+    function draw(bytes32[] coordinates, uint shapeIndex, uint priceIfEmpty) public {        
+        uint cost = 0;
+        for(uint i = 0; i < coordinates.length; i++){
+            Pixel storage p = grid[coordinates[i]];
+            if(p.owner == msg.sender) continue;
 
-        // TODO: determine how we're going to create the shape
+            if(p.owner == address(0)){
+                // Empty pixel
+                cost += priceIfEmpty;               
+                publicBalance += priceIfEmpty;
+                p.price = priceIfEmpty;
+            } else {
+                // Pixel is owned
+                cost += p.price;
+                balances[p.owner] += p.price;
+                playerAmountToTax[p.owner] -= p.price;
+            }
 
-        Pixel storage p = grid[x][y];
-        
-        if(p.owner == msg.sender) return;
-
-       
-        if(p.owner == address(0)){
-            // Empty pixel
-            require(balances[msg.sender] >= priceIfEmpty, "Not enough balance. Add more funds");
-            balances[msg.sender] -= priceIfEmpty;
-            
-            publicBalance += priceIfEmpty;
-            p.price = priceIfEmpty;
-        } else {
-            // Pixel is owned
-            require(balances[msg.sender] >= p.price, "Not enough balance. Add more funds");
-            balances[msg.sender] -= p.price;
-            balances[p.owner] += p.price;
-            playerAmountToTax[p.owner] -= p.price;
+            p.lastPriceUpdate = 0; // New owner can change the price now
+            p.owner = msg.sender;
+            p.shapeIndex = shapeIndex;
+            playerPixels[msg.sender].push(coordinates[i]);
         }
 
-        p.lastPriceUpdate = 0; // New owner can change the price now
-        p.owner = msg.sender;
-        p.shapeIndex = shapeIndex;
+        require(balances[msg.sender] >= cost, "Not enough balance. Add more funds");
 
-        playerPixelsX[msg.sender].push(x);
-        playerPixelsY[msg.sender].push(y);
-
-        playerAmountToTax[msg.sender] += p.price;
-
-        emit PixelDrawn(msg.sender, x, y, p.price);
+        playerAmountToTax[msg.sender] += cost;
+        balances[msg.sender] -= cost;
     }
+
 
     function canApplyTax() public view returns(bool){
         return lastTax + taxPeriod < block.timestamp;
     }
     
     
-    function calculateTax(uint x, uint y) public view returns(uint){
-        require(x < 350 && y < 350, "Invalid coordinate");
-        Pixel storage p = grid[x][y];
+    function calculateTax(bytes32 coordinate) public view returns(uint){
+        Pixel storage p = grid[coordinate];
         return p.price * taxPercentage / 100;
     }
-
 
     function tax() public onlyController {
         if(lastTax + taxPeriod > block.timestamp) return;
@@ -134,17 +123,15 @@ contract Canvas is Controlled {
             uint taxAmount = playerAmountToTax[players[i]] * taxPercentage / 100;
             if(balances[players[i]] < taxAmount){
                 // If you ain't got enough money for your pixels, you lose everything :(
-                for(uint j = 0; j < playerPixelsX[players[i]].length; j++){
-                    uint x = playerPixelsX[players[i]][j];
-                    uint y = playerPixelsY[players[i]][j];
+                for(uint j = 0; j < playerPixels[players[i]].length; j++){
+                    bytes32 coordinate = playerPixels[players[i]][j];
 
-                    if(grid[x][y].owner == players[i]){
-                        grid[x][y].owner = address(0);
-                        grid[x][y].price = 0;
-                        grid[x][y].lastPriceUpdate = 0;
+                    if(grid[coordinate].owner == players[i]){
+                        grid[coordinate].owner = address(0);
+                        grid[coordinate].price = 0;
+                        grid[coordinate].lastPriceUpdate = 0;
 
-                        delete playerPixelsX[players[i]];
-                        delete playerPixelsY[players[i]];
+                        delete playerPixels[players[i]];
                     }
                 }
             } else {
@@ -159,19 +146,16 @@ contract Canvas is Controlled {
 
 
     /// @notice View the price of a pixel
-    function price(uint x, uint y) public view returns(uint){
-        require(x < 350 && y < 350, "Invalid coordinate");
-
-        Pixel storage p = grid[x][y];
+    /// @notice View the price of a pixel
+    function price(bytes32 coordinate) public view returns(uint){
+        Pixel storage p = grid[coordinate];
         return p.price;
     }
 
 
     /// @notice Determine if you can update the price of a pixel
-    function canUpdatePrice(uint x, uint y) public view returns(bool){
-        require(x < 350 && y < 350, "Invalid coordinate");
-
-        Pixel storage p = grid[x][y];
+    function canUpdatePrice(bytes32 coordinate) public view returns(bool){
+        Pixel storage p = grid[coordinate];
 
         require(p.owner == msg.sender, "You're not the owner of this pixel");
 
@@ -183,7 +167,8 @@ contract Canvas is Controlled {
     function setPrice(uint x, uint y, uint newPrice) public {
         require(x < 350 && y < 350, "Invalid coordinate");
 
-        Pixel storage p = grid[x][y];
+        bytes32 coordinate = keccak256(abi.encodePacked(x, y));
+        Pixel storage p = grid[coordinate];
 
         require(p.owner == msg.sender, "You're not the owner of this pixel");
         require(p.lastPriceUpdate + priceUpdatePeriod < block.timestamp, "You cannot update the price yet");
@@ -194,7 +179,7 @@ contract Canvas is Controlled {
         p.price = newPrice;
         p.lastPriceUpdate = block.timestamp;
 
-        emit PixelPriceUpdated(x, y, newPrice);
+        emit PixelPriceUpdated(coordinate, newPrice);
     }
 
 
@@ -229,7 +214,7 @@ contract Canvas is Controlled {
         taxPercentage = newPercentage;
     }
 
-    event PixelDrawn(address owner, uint x, uint y, uint price);
-    event PixelPriceUpdated(uint x, uint y, uint newPrice);
+    event PixelDrawn(address owner, bytes32 coordinate, uint price);
+    event PixelPriceUpdated(bytes32 coordinate, uint newPrice);
     event TaxApplied(uint timestamp);
 }
