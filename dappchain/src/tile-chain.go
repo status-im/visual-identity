@@ -14,6 +14,19 @@ func main() {
 	plugin.Serve(Contract)
 }
 
+// Lines is the representation of the client payload
+// type pixels [][]int16
+// type Line struct {
+// 	color  string
+// 	startX float64
+// 	endX   float64
+// 	startY float64
+// 	endY   float64
+// 	size   int
+// 	pixels pixels
+// }
+// type Lines []Line
+
 type TileChain struct {
 }
 
