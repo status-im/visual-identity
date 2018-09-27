@@ -2,12 +2,12 @@ package main
 
 import (
 	"encoding/json"
-	"log"
-	"types"
+	"fmt"
+
+	"github.com/status-im/visual-identity/dappchain/src/types"
 
 	"github.com/loomnetwork/go-loom/plugin"
 	contract "github.com/loomnetwork/go-loom/plugin/contractpb"
-	"github.com/pkg/errors"
 )
 
 func main() {
@@ -51,28 +51,82 @@ func (e *TileChain) GetTileMapState(ctx contract.StaticContext, _ *types.TileMap
 }
 
 func (e *TileChain) SetTileMapState(ctx contract.Context, tileMapTx *types.TileMapTx) error {
-	state := &types.TileMapState{
-		Data: tileMapTx.GetData(),
+	payload := tileMapTx.GetData()
+	if err := e.setState(ctx, payload); err != nil {
+		fmt.Printf("setState failed: %v\n", err)
+		return fmt.Errorf("set state: %v", err)
 	}
 
-	if err := ctx.Set([]byte("TileMapState"), state); err != nil {
-		return errors.Wrap(err, "Error setting state")
+	if err := e.emitTileMapStateUpdate(ctx, payload); err != nil {
+		fmt.Printf("Failed to emit message: %v\n", err)
+		return fmt.Errorf("emit update message: %v", err)
 	}
 
+	return nil
+}
+
+// TileMapState represents canvas state data as passed from JS client.
+type TileMapState struct {
+	Width      int           `json:"width"`
+	Height     int           `json:"height"`
+	LinesArray []TileMapLine `json:"linesArray"`
+}
+
+// TileMapLine represents single line info from client JSON.
+type TileMapLine struct {
+	Color  string  `json:"color"`
+	Size   int     `json:"size"`
+	StartX float64 `json:"startX"`
+	EndX   float64 `json:"endX"`
+}
+
+func (e *TileChain) setState(ctx contract.Context, payload string) error {
+	state, err := e.parseStateJSON(payload)
+	if err != nil {
+		return err
+	}
+
+	e.handleState(state)
+
+	ctxState := &types.TileMapState{
+		Data: "???",
+	}
+
+	key := []byte("TileMapState")
+	err = ctx.Set(key, ctxState)
+	if err != nil {
+		return fmt.Errorf("context.Set: %v", err)
+	}
+
+	return nil
+}
+
+func (e *TileChain) parseStateJSON(payload string) (*TileMapState, error) {
+	var state TileMapState
+	err := json.Unmarshal([]byte(payload), &state)
+	if err != nil {
+		return nil, fmt.Errorf("json unmarshal: %v", err)
+	}
+	return &state, nil
+}
+
+func (e *TileChain) emitTileMapStateUpdate(ctx contract.Context, payload string) error {
 	emitMsg := struct {
 		Data   string
 		Method string
-	}{tileMapTx.GetData(), "onTileMapStateUpdate"}
+	}{payload, "onTileMapStateUpdate"}
 
-	emitMsgJSON, err := json.Marshal(emitMsg)
-
+	msg, err := json.Marshal(emitMsg)
 	if err != nil {
-		log.Println("Error marshalling emit message")
+		return fmt.Errorf("json marshal: %v", err)
 	}
 
-	ctx.Emit(emitMsgJSON)
-
+	ctx.Emit(msg)
 	return nil
+}
+
+func (e *TileChain) handleState(state *TileMapState) error {
+	return fmt.Errorf("TBD")
 }
 
 var Contract plugin.Contract = contract.MakePluginContract(&TileChain{})
