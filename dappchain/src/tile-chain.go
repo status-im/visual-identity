@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/status-im/visual-identity/dappchain/src/types"
+	"types"
 
 	"github.com/loomnetwork/go-loom/plugin"
 	contract "github.com/loomnetwork/go-loom/plugin/contractpb"
@@ -77,8 +77,13 @@ type TileMapLine struct {
 	Color  string  `json:"color"`
 	Size   int     `json:"size"`
 	StartX float64 `json:"startX"`
+	StartY float64 `json:"startY"`
 	EndX   float64 `json:"endX"`
+	EndY   float64 `json:"endY"`
+	Pixels Pixels  `json:"pixels"`
 }
+
+type Pixels [][2]int16
 
 func (e *TileChain) setState(ctx contract.Context, payload string) error {
 	state, err := e.parseStateJSON(payload)

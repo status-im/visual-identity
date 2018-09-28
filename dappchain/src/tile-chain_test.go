@@ -8,9 +8,58 @@ func TestStateJSON(t *testing.T) {
   "width": 320,
   "height": 240,
   "linesArray": [
-    {"color": "red", "size": 1, "startX": 1.2, "endX": 2.2},
-    {"color": "green", "size": 1, "startX": 1.3, "endX": 2.3},
-    {"color": "blue", "size": 1, "startX": 1.4, "endX": 2.4}
+{
+    "color": "#444",
+    "size": 1,
+    "startX": 71.9140625,
+    "startY": 44.4296875,
+    "endX": 72.9140625,
+    "endY": 45.4296875,
+    "pixels": [
+      [
+        71,
+        44
+      ],
+      [
+        71,
+        45
+      ],
+      [
+        72,
+        44
+      ],
+      [
+        72,
+        45
+      ]
+    ]
+  },
+  {
+    "color": "#444",
+    "size": 1,
+    "startX": 72.9140625,
+    "startY": 45.4296875,
+    "endX": 72.9140625,
+    "endY": 54.6796875,
+    "pixels": [
+      [
+        72,
+        45
+      ],
+      [
+        72,
+        46
+      ],
+      [
+        72,
+        47
+      ],
+      [
+        72,
+        48
+      ]
+    ]
+  }
   ]
 }
 	`
@@ -18,9 +67,10 @@ func TestStateJSON(t *testing.T) {
 		Width:  320,
 		Height: 240,
 		LinesArray: []TileMapLine{
-			{"red", 1, 1.2, 2.2},
-			{"green", 1, 1.3, 2.2},
-			{"blue", 1, 1.4, 2.4},
+			{"#444", 1, 71.9140625, 44.4296875, 72.9140625, 45.4296875,
+				Pixels{[2]int16{71, 44}, [2]int16{71, 45}, [2]int16{72, 44}, [2]int16{72, 45}}},
+			{"#444", 1, 72.9140625, 45.4296875, 72.9140625, 54.6796875,
+				Pixels{[2]int16{72, 45}, [2]int16{72, 46}, [2]int16{72, 47}, [2]int16{72, 48}}},
 		},
 	}
 	state, err := tc.parseStateJSON(payload)
