@@ -2,11 +2,13 @@ package main
 
 import "testing"
 
+func GetFirstPixels(s *TileMapState) [2]int16 {
+	return s.LinesArray[0].Pixels[0]
+}
+
 func TestStateJSON(t *testing.T) {
 	tc := &TileChain{}
 	payload := `{
-  "width": 320,
-  "height": 240,
   "linesArray": [
 {
     "color": "#444",
@@ -64,8 +66,6 @@ func TestStateJSON(t *testing.T) {
 }
 	`
 	expected := &TileMapState{
-		Width:  320,
-		Height: 240,
 		LinesArray: []TileMapLine{
 			{"#444", 1, 71.9140625, 44.4296875, 72.9140625, 45.4296875,
 				Pixels{[2]int16{71, 44}, [2]int16{71, 45}, [2]int16{72, 44}, [2]int16{72, 45}}},
@@ -82,6 +82,10 @@ func TestStateJSON(t *testing.T) {
 	}
 	if state.Height != expected.Height {
 		t.Fatalf("wrong height: expected %v, got %v", expected.Height, state.Height)
+	}
+	if GetFirstPixels(state) != GetFirstPixels(expected) {
+		GetFirstPixels(state)
+		t.Fatalf("wrong pixel: expected %v, got %v", GetFirstPixels(expected), GetFirstPixels(state))
 	}
 	// TODO: add proper struct check
 }
