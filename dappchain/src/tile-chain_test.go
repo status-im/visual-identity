@@ -146,3 +146,14 @@ func TestSimpleSetAndGet(t *testing.T) {
 		t.Fatalf("Data does not match: expected %v, got %v", ctxState.Data, curState.Data)
 	}
 }
+
+func TestUnmarshalJSONtoProtoBuf(t *testing.T) {
+	tc := &TileChain{}
+	addr1 := loom.MustParseAddress("chain:0xb16a379ec18d4093666f8f38b11a3071c920207d")
+	ctx := contractpb.WrapPluginContext(plugin.CreateFakeContext(addr1, addr1))
+	state, err := tc.JSONtoPixelMap(payload)
+	err = ctx.Set([]byte("PixelMapState"), state)
+	if err != nil {
+		t.Errorf("Error: %v", err)
+	}
+}

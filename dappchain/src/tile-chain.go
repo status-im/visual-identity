@@ -143,6 +143,15 @@ func (e *TileChain) parseStateJSON(payload string) (*PixelMapState, error) {
 	return &state, nil
 }
 
+func (e *TileChain) JSONtoPixelMap(payload string) (*types.PixelMaps, error) {
+	var state types.PixelMaps
+	err := json.Unmarshal([]byte(payload), &state)
+	if err != nil {
+		return nil, fmt.Errorf("json unmarshal: %v", err)
+	}
+	return &state, nil
+}
+
 func (e *TileChain) emitTileMapStateUpdate(ctx contract.Context, payload string) error {
 	emitMsg := struct {
 		Data   string
