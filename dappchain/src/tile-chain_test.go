@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 
 	loom "github.com/loomnetwork/go-loom"
@@ -68,7 +67,7 @@ const payload = `{
 }
 	`
 
-var ParsedPayload = &TileMapState{
+var ParsedPayload = &PixelMapState{
 	LinesArray: []TileMapLine{
 		{"#444", 1, 71.9140625, 44.4296875, 72.9140625, 45.4296875,
 			Pixels{[2]int16{71, 44}, [2]int16{71, 45}, [2]int16{72, 44}, [2]int16{72, 45}}},
@@ -77,13 +76,13 @@ var ParsedPayload = &TileMapState{
 	},
 }
 
-func GetFirstPixels(s *TileMapState) [2]int16 {
+func GetFirstPixels(s *PixelMapState) [2]int16 {
 	return s.LinesArray[0].Pixels[0]
 }
 
 func TestStateJSON(t *testing.T) {
 	tc := &TileChain{}
-	expected := &TileMapState{
+	expected := &PixelMapState{
 		LinesArray: []TileMapLine{
 			{"#444", 1, 71.9140625, 44.4296875, 72.9140625, 45.4296875,
 				Pixels{[2]int16{71, 44}, [2]int16{71, 45}, [2]int16{72, 44}, [2]int16{72, 45}}},
@@ -119,12 +118,7 @@ func TestSetTileMapState(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error: %v", err)
 	}
-	var curState types.TileMapState
-	err = ctx.Get([]byte("TileMapState"), &curState)
-	if err != nil {
-		t.Errorf("Error: %v", err)
-	}
-	parsedState, err2 := tc.parseStateJSON(curState.Data)
+	parsedState, err2 := tc.getState(ctx)
 	if err2 != nil {
 		t.Errorf("Error: %v", err2)
 	}

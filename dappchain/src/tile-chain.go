@@ -65,8 +65,23 @@ func (e *TileChain) SetTileMapState(ctx contract.Context, tileMapTx *types.TileM
 	return nil
 }
 
+func (e *TileChain) UpdateTileMapState(ctx contract.Context, tileMapTx *types.TileMapTx) error {
+	payload := tileMapTx.GetData()
+	if err := e.setState(ctx, payload); err != nil {
+		fmt.Printf("setState failed: %v\n", err)
+		return fmt.Errorf("set state: %v", err)
+	}
+
+	if err := e.emitTileMapStateUpdate(ctx, payload); err != nil {
+		fmt.Printf("Failed to emit message: %v\n", err)
+		return fmt.Errorf("emit update message: %v", err)
+	}
+
+	return nil
+}
+
 // TileMapState represents canvas state data as passed from JS client.
-type TileMapState struct {
+type PixelMapState struct {
 	Width      int           `json:"width"`
 	Height     int           `json:"height"`
 	LinesArray []TileMapLine `json:"linesArray"`
@@ -106,8 +121,21 @@ func (e *TileChain) setState(ctx contract.Context, payload string) error {
 	return nil
 }
 
-func (e *TileChain) parseStateJSON(payload string) (*TileMapState, error) {
-	var state TileMapState
+func (e *TileChain) getState(ctx contract.Context) (*PixelMapState, error) {
+	var curState types.TileMapState
+	err := ctx.Get([]byte("TileMapState"), &curState)
+	if err != nil {
+		return nil, fmt.Errorf("State retrieval failed: %v", err)
+	}
+	state, err2 := e.parseStateJSON(curState.Data)
+	if err2 != nil {
+		return nil, err2
+	}
+	return state, nil
+}
+
+func (e *TileChain) parseStateJSON(payload string) (*PixelMapState, error) {
+	var state PixelMapState
 	err := json.Unmarshal([]byte(payload), &state)
 	if err != nil {
 		return nil, fmt.Errorf("json unmarshal: %v", err)
@@ -130,7 +158,7 @@ func (e *TileChain) emitTileMapStateUpdate(ctx contract.Context, payload string)
 	return nil
 }
 
-func (e *TileChain) handleState(state *TileMapState) error {
+func (e *TileChain) handleState(state *PixelMapState) error {
 	return fmt.Errorf("TBD")
 }
 
