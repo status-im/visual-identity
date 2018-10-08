@@ -94,7 +94,7 @@ func (e *TileChain) setState(ctx contract.Context, payload string) error {
 	e.handleState(state)
 
 	ctxState := &types.TileMapState{
-		Data: "???",
+		Data: payload,
 	}
 
 	key := []byte("TileMapState")

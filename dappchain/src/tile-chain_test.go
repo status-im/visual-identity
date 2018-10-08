@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 
 	loom "github.com/loomnetwork/go-loom"
@@ -80,10 +81,6 @@ func GetFirstPixels(s *TileMapState) [2]int16 {
 	return s.LinesArray[0].Pixels[0]
 }
 
-func GetStateData(s *types.TileMapState) string {
-	return s.Data
-}
-
 func TestStateJSON(t *testing.T) {
 	tc := &TileChain{}
 	expected := &TileMapState{
@@ -116,23 +113,42 @@ func TestSetTileMapState(t *testing.T) {
 	tx := &types.TileMapTx{
 		Data: payload,
 	}
-	expected := ParsedPayload
 	addr1 := loom.MustParseAddress("chain:0xb16a379ec18d4093666f8f38b11a3071c920207d")
 	ctx := contractpb.WrapPluginContext(plugin.CreateFakeContext(addr1, addr1))
 	err := tc.SetTileMapState(ctx, tx)
 	if err != nil {
 		t.Errorf("Error: %v", err)
 	}
-	state, err2 := tc.GetTileMapState(ctx, tx)
+	var curState types.TileMapState
+	err = ctx.Get([]byte("TileMapState"), &curState)
+	if err != nil {
+		t.Errorf("Error: %v", err)
+	}
+	parsedState, err2 := tc.parseStateJSON(curState.Data)
 	if err2 != nil {
+		t.Errorf("Error: %v", err2)
+	}
+	if GetFirstPixels(parsedState) != GetFirstPixels(ParsedPayload) {
+		t.Fatalf("wrong pixel: expected %v, got %v", GetFirstPixels(ParsedPayload), GetFirstPixels(parsedState))
+	}
+}
+
+func TestSimpleSetAndGet(t *testing.T) {
+	addr1 := loom.MustParseAddress("chain:0xb16a379ec18d4093666f8f38b11a3071c920207d")
+	ctx := contractpb.WrapPluginContext(plugin.CreateFakeContext(addr1, addr1))
+	ctxState := &types.TileMapState{
+		Data: "teststring",
+	}
+	err := ctx.Set([]byte("TileMapState"), ctxState)
+	if err != nil {
 		t.Errorf("Error: %v", err)
 	}
-	chainState := GetStateData(state)
-	parsedState, err3 := tc.parseStateJSON(chainState)
-	if err3 != nil {
+	var curState types.TileMapState
+	err = ctx.Get([]byte("TileMapState"), &curState)
+	if err != nil {
 		t.Errorf("Error: %v", err)
 	}
-	if GetFirstPixels(parsedState) != GetFirstPixels(expected) {
-		t.Fatalf("wrong pixel: expected %v, got %v", GetFirstPixels(expected), GetFirstPixels(parsedState))
+	if curState.Data != ctxState.Data {
+		t.Fatalf("Data does not match: expected %v, got %v", ctxState.Data, curState.Data)
 	}
 }
