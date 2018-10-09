@@ -98,6 +98,53 @@ func (m *TileMapState) GetData() string {
 	return ""
 }
 
+type Pixel struct {
+	X                    int32    `protobuf:"varint,1,opt,name=x,proto3" json:"x,omitempty"`
+	Y                    int32    `protobuf:"varint,2,opt,name=y,proto3" json:"y,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Pixel) Reset()         { *m = Pixel{} }
+func (m *Pixel) String() string { return proto.CompactTextString(m) }
+func (*Pixel) ProtoMessage()    {}
+func (*Pixel) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d938547f84707355, []int{2}
+}
+
+func (m *Pixel) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Pixel.Unmarshal(m, b)
+}
+func (m *Pixel) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Pixel.Marshal(b, m, deterministic)
+}
+func (m *Pixel) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Pixel.Merge(m, src)
+}
+func (m *Pixel) XXX_Size() int {
+	return xxx_messageInfo_Pixel.Size(m)
+}
+func (m *Pixel) XXX_DiscardUnknown() {
+	xxx_messageInfo_Pixel.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Pixel proto.InternalMessageInfo
+
+func (m *Pixel) GetX() int32 {
+	if m != nil {
+		return m.X
+	}
+	return 0
+}
+
+func (m *Pixel) GetY() int32 {
+	if m != nil {
+		return m.Y
+	}
+	return 0
+}
+
 type PixelMaps struct {
 	LinesArray           []*PixelMaps_TileMapLine `protobuf:"bytes,1,rep,name=linesArray,proto3" json:"linesArray,omitempty"`
 	XXX_NoUnkeyedLiteral struct{}                 `json:"-"`
@@ -109,7 +156,7 @@ func (m *PixelMaps) Reset()         { *m = PixelMaps{} }
 func (m *PixelMaps) String() string { return proto.CompactTextString(m) }
 func (*PixelMaps) ProtoMessage()    {}
 func (*PixelMaps) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d938547f84707355, []int{2}
+	return fileDescriptor_d938547f84707355, []int{3}
 }
 
 func (m *PixelMaps) XXX_Unmarshal(b []byte) error {
@@ -140,11 +187,10 @@ func (m *PixelMaps) GetLinesArray() []*PixelMaps_TileMapLine {
 type PixelMaps_TileMapLine struct {
 	Color                string   `protobuf:"bytes,1,opt,name=color,proto3" json:"color,omitempty"`
 	Size                 int64    `protobuf:"varint,2,opt,name=size,proto3" json:"size,omitempty"`
-	Startx               float32  `protobuf:"fixed32,3,opt,name=startx,proto3" json:"startx,omitempty"`
-	Starty               float32  `protobuf:"fixed32,4,opt,name=starty,proto3" json:"starty,omitempty"`
-	Endx                 float32  `protobuf:"fixed32,5,opt,name=endx,proto3" json:"endx,omitempty"`
-	Endy                 float32  `protobuf:"fixed32,6,opt,name=endy,proto3" json:"endy,omitempty"`
-	Pixels               []int32  `protobuf:"varint,7,rep,packed,name=pixels,proto3" json:"pixels,omitempty"`
+	StartX               float32  `protobuf:"fixed32,3,opt,name=startX,proto3" json:"startX,omitempty"`
+	StartY               float32  `protobuf:"fixed32,4,opt,name=startY,proto3" json:"startY,omitempty"`
+	EndX                 float32  `protobuf:"fixed32,5,opt,name=endX,proto3" json:"endX,omitempty"`
+	EndY                 float32  `protobuf:"fixed32,6,opt,name=endY,proto3" json:"endY,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -154,7 +200,7 @@ func (m *PixelMaps_TileMapLine) Reset()         { *m = PixelMaps_TileMapLine{} }
 func (m *PixelMaps_TileMapLine) String() string { return proto.CompactTextString(m) }
 func (*PixelMaps_TileMapLine) ProtoMessage()    {}
 func (*PixelMaps_TileMapLine) Descriptor() ([]byte, []int) {
-	return fileDescriptor_d938547f84707355, []int{2, 0}
+	return fileDescriptor_d938547f84707355, []int{3, 0}
 }
 
 func (m *PixelMaps_TileMapLine) XXX_Unmarshal(b []byte) error {
@@ -189,37 +235,85 @@ func (m *PixelMaps_TileMapLine) GetSize() int64 {
 	return 0
 }
 
-func (m *PixelMaps_TileMapLine) GetStartx() float32 {
+func (m *PixelMaps_TileMapLine) GetStartX() float32 {
 	if m != nil {
-		return m.Startx
+		return m.StartX
 	}
 	return 0
 }
 
-func (m *PixelMaps_TileMapLine) GetStarty() float32 {
+func (m *PixelMaps_TileMapLine) GetStartY() float32 {
 	if m != nil {
-		return m.Starty
+		return m.StartY
 	}
 	return 0
 }
 
-func (m *PixelMaps_TileMapLine) GetEndx() float32 {
+func (m *PixelMaps_TileMapLine) GetEndX() float32 {
 	if m != nil {
-		return m.Endx
+		return m.EndX
 	}
 	return 0
 }
 
-func (m *PixelMaps_TileMapLine) GetEndy() float32 {
+func (m *PixelMaps_TileMapLine) GetEndY() float32 {
 	if m != nil {
-		return m.Endy
+		return m.EndY
 	}
 	return 0
 }
 
-func (m *PixelMaps_TileMapLine) GetPixels() []int32 {
+type CreateAccountTx struct {
+	Version              int32    `protobuf:"varint,1,opt,name=version,proto3" json:"version,omitempty"`
+	Owner                string   `protobuf:"bytes,2,opt,name=owner,proto3" json:"owner,omitempty"`
+	Data                 []byte   `protobuf:"bytes,3,opt,name=data,proto3" json:"data,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *CreateAccountTx) Reset()         { *m = CreateAccountTx{} }
+func (m *CreateAccountTx) String() string { return proto.CompactTextString(m) }
+func (*CreateAccountTx) ProtoMessage()    {}
+func (*CreateAccountTx) Descriptor() ([]byte, []int) {
+	return fileDescriptor_d938547f84707355, []int{4}
+}
+
+func (m *CreateAccountTx) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateAccountTx.Unmarshal(m, b)
+}
+func (m *CreateAccountTx) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateAccountTx.Marshal(b, m, deterministic)
+}
+func (m *CreateAccountTx) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateAccountTx.Merge(m, src)
+}
+func (m *CreateAccountTx) XXX_Size() int {
+	return xxx_messageInfo_CreateAccountTx.Size(m)
+}
+func (m *CreateAccountTx) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateAccountTx.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateAccountTx proto.InternalMessageInfo
+
+func (m *CreateAccountTx) GetVersion() int32 {
 	if m != nil {
-		return m.Pixels
+		return m.Version
+	}
+	return 0
+}
+
+func (m *CreateAccountTx) GetOwner() string {
+	if m != nil {
+		return m.Owner
+	}
+	return ""
+}
+
+func (m *CreateAccountTx) GetData() []byte {
+	if m != nil {
+		return m.Data
 	}
 	return nil
 }
@@ -227,27 +321,32 @@ func (m *PixelMaps_TileMapLine) GetPixels() []int32 {
 func init() {
 	proto.RegisterType((*TileMapTx)(nil), "TileMapTx")
 	proto.RegisterType((*TileMapState)(nil), "TileMapState")
+	proto.RegisterType((*Pixel)(nil), "Pixel")
 	proto.RegisterType((*PixelMaps)(nil), "PixelMaps")
 	proto.RegisterType((*PixelMaps_TileMapLine)(nil), "PixelMaps.TileMapLine")
+	proto.RegisterType((*CreateAccountTx)(nil), "CreateAccountTx")
 }
 
 func init() { proto.RegisterFile("types.proto", fileDescriptor_d938547f84707355) }
 
 var fileDescriptor_d938547f84707355 = []byte{
-	// 225 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x90, 0xc1, 0x4a, 0xc4, 0x30,
-	0x10, 0x86, 0xc9, 0x76, 0x5b, 0xe9, 0xd4, 0x53, 0x90, 0x65, 0xf0, 0x62, 0xe8, 0x29, 0xa7, 0x1e,
-	0x14, 0xbc, 0x7b, 0x77, 0x41, 0xe2, 0xbe, 0x40, 0x74, 0xe7, 0x10, 0x28, 0x6d, 0x48, 0x72, 0x48,
-	0x7c, 0x21, 0x9f, 0xce, 0x77, 0x90, 0xc4, 0x50, 0x7a, 0xf0, 0xf6, 0xff, 0xdf, 0xfc, 0x99, 0x3f,
-	0x0c, 0x0c, 0x21, 0x59, 0xf2, 0x93, 0x75, 0x6b, 0x58, 0xc7, 0x07, 0xe8, 0x2f, 0x66, 0xa6, 0xb3,
-	0xb6, 0x97, 0xc8, 0x39, 0x1c, 0xaf, 0x3a, 0x68, 0x64, 0x82, 0xc9, 0x5e, 0x15, 0x3d, 0x8e, 0x70,
-	0x5b, 0x03, 0xef, 0x41, 0x07, 0xfa, 0x37, 0xf3, 0xc3, 0xa0, 0x7f, 0x33, 0x91, 0xe6, 0xb3, 0xb6,
-	0x9e, 0x3f, 0x03, 0xcc, 0x66, 0x21, 0xff, 0xe2, 0x9c, 0x4e, 0xc8, 0x44, 0x23, 0x87, 0xc7, 0xd3,
-	0xb4, 0xcd, 0xa7, 0xba, 0xee, 0xd5, 0x2c, 0xa4, 0x76, 0xc9, 0xfb, 0x6f, 0x06, 0xc3, 0x6e, 0xc6,
-	0xef, 0xa0, 0xfd, 0x5c, 0xe7, 0xd5, 0xd5, 0xaa, 0x3f, 0x93, 0xfb, 0xbd, 0xf9, 0x22, 0x3c, 0x08,
-	0x26, 0x1b, 0x55, 0x34, 0x3f, 0x41, 0xe7, 0x83, 0x76, 0x21, 0x62, 0x23, 0x98, 0x3c, 0xa8, 0xea,
-	0x36, 0x9e, 0xf0, 0xb8, 0xe3, 0x29, 0xef, 0xa0, 0xe5, 0x1a, 0xb1, 0x2d, 0xb4, 0xe8, 0xca, 0x12,
-	0x76, 0x1b, 0x4b, 0xf9, 0xbd, 0xcd, 0xdf, 0xf6, 0x78, 0x23, 0x1a, 0xd9, 0xaa, 0xea, 0x3e, 0xba,
-	0x72, 0xbb, 0xa7, 0xdf, 0x00, 0x00, 0x00, 0xff, 0xff, 0xf9, 0x26, 0x63, 0xa4, 0x4a, 0x01, 0x00,
-	0x00,
+	// 276 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x91, 0x41, 0x4b, 0xc4, 0x30,
+	0x10, 0x85, 0xc9, 0xee, 0xb6, 0xd2, 0x69, 0x41, 0x08, 0xb2, 0x04, 0x2f, 0x96, 0x7a, 0xe9, 0xa9,
+	0x07, 0x05, 0xef, 0x8b, 0x57, 0x17, 0x24, 0x56, 0xd8, 0x1e, 0x63, 0x77, 0x0e, 0x81, 0x92, 0x94,
+	0x24, 0x6a, 0xeb, 0x9f, 0xf0, 0xd7, 0xf9, 0x7f, 0xa4, 0x69, 0x2c, 0x3d, 0x78, 0x9b, 0xef, 0xcd,
+	0x23, 0xf3, 0x78, 0x81, 0xd4, 0x8d, 0x3d, 0xda, 0xaa, 0x37, 0xda, 0xe9, 0xe2, 0x06, 0x92, 0x5a,
+	0x76, 0x78, 0x14, 0x7d, 0x3d, 0x50, 0x0a, 0xbb, 0xb3, 0x70, 0x82, 0x91, 0x9c, 0x94, 0x09, 0xf7,
+	0x73, 0x51, 0x40, 0x16, 0x0c, 0x2f, 0x4e, 0x38, 0xfc, 0xd7, 0x73, 0x0b, 0xd1, 0xb3, 0x1c, 0xb0,
+	0xa3, 0x19, 0x90, 0xc1, 0x6f, 0x22, 0x4e, 0x86, 0x89, 0x46, 0xb6, 0x99, 0x69, 0x2c, 0x7e, 0x08,
+	0x24, 0xde, 0x75, 0x14, 0xbd, 0xa5, 0x0f, 0x00, 0x9d, 0x54, 0x68, 0x0f, 0xc6, 0x88, 0x91, 0x91,
+	0x7c, 0x5b, 0xa6, 0x77, 0xfb, 0x6a, 0xd9, 0x57, 0xe1, 0xe6, 0x93, 0x54, 0xc8, 0x57, 0xce, 0xeb,
+	0x6f, 0x02, 0xe9, 0x6a, 0x47, 0xaf, 0x20, 0x6a, 0x75, 0xa7, 0x4d, 0xc8, 0x33, 0xc3, 0x14, 0xd2,
+	0xca, 0x2f, 0xf4, 0xc7, 0xb7, 0xdc, 0xcf, 0x74, 0x0f, 0xb1, 0x75, 0xc2, 0xb8, 0x13, 0xdb, 0xe6,
+	0xa4, 0xdc, 0xf0, 0x40, 0x8b, 0xde, 0xb0, 0xdd, 0x4a, 0x6f, 0xa6, 0x37, 0x50, 0x9d, 0x4f, 0x2c,
+	0xf2, 0xaa, 0x9f, 0x83, 0xd6, 0xb0, 0x78, 0xd1, 0x9a, 0xe2, 0x15, 0x2e, 0x1f, 0x0d, 0x0a, 0x87,
+	0x87, 0xb6, 0xd5, 0xef, 0xca, 0xd5, 0x03, 0x65, 0x70, 0xf1, 0x81, 0xc6, 0x4a, 0xad, 0x42, 0x19,
+	0x7f, 0x38, 0xc5, 0xd5, 0x9f, 0x0a, 0x8d, 0x4f, 0x96, 0xf0, 0x19, 0x96, 0x4e, 0xa7, 0x60, 0xd9,
+	0xdc, 0xe9, 0x5b, 0xec, 0xff, 0xe7, 0xfe, 0x37, 0x00, 0x00, 0xff, 0xff, 0x63, 0x40, 0xbc, 0x35,
+	0xae, 0x01, 0x00, 0x00,
 }

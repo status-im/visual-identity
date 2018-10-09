@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/golang/protobuf/jsonpb"
 	"types"
 
 	"github.com/loomnetwork/go-loom/plugin"
@@ -145,7 +146,7 @@ func (e *TileChain) parseStateJSON(payload string) (*PixelMapState, error) {
 
 func (e *TileChain) JSONtoPixelMap(payload string) (*types.PixelMaps, error) {
 	var state types.PixelMaps
-	err := json.Unmarshal([]byte(payload), &state)
+	err := jsonpb.UnmarshalString(payload, &state)
 	if err != nil {
 		return nil, fmt.Errorf("json unmarshal: %v", err)
 	}

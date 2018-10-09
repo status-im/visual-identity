@@ -8,15 +8,26 @@ message TileMapState {
   string data = 1;
 }
 
+message Pixel {
+    int32 x = 1;
+    int32 y = 2;
+}
+
+message TileMapLine {
+  string color = 1;
+  int64 size = 2;
+  float startX = 3;
+  float startY = 4;
+  float endX = 5;
+  float endY = 6;
+}
+
 message PixelMaps {
-  message TileMapLine {
-    string color = 1;
-    int64 size = 2;
-    float startx = 3;
-    float starty = 4;
-    float endx = 5;
-    float endy = 6;
-    repeated int32 pixels = 7;
-  }
   repeated TileMapLine linesArray = 1;
+}
+
+message CreateAccountTx {
+	int32 version = 1;
+	string owner = 2;
+	bytes data = 3;
 }

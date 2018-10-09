@@ -66,6 +66,27 @@ const payload = `{
   ]
 }
 	`
+const NoPixelsPayload = `{
+  "linesArray": [
+{
+    "color": "#444",
+    "size": 1,
+    "startX": 71.9140625,
+    "startY": 44.4296875,
+    "endX": 72.9140625,
+    "endY": 45.4296875
+  },
+  {
+    "color": "#444",
+    "size": 1,
+    "startX": 72.9140625,
+    "startY": 45.4296875,
+    "endX": 72.9140625,
+    "endY": 54.6796875
+  }
+  ]
+}
+	`
 
 var ParsedPayload = &PixelMapState{
 	LinesArray: []TileMapLine{
@@ -78,6 +99,10 @@ var ParsedPayload = &PixelMapState{
 
 func GetFirstPixels(s *PixelMapState) [2]int16 {
 	return s.LinesArray[0].Pixels[0]
+}
+
+func GetFirstColor(s *types.PixelMaps) string {
+	return s.LinesArray[0].Color
 }
 
 func TestStateJSON(t *testing.T) {
@@ -149,11 +174,30 @@ func TestSimpleSetAndGet(t *testing.T) {
 
 func TestUnmarshalJSONtoProtoBuf(t *testing.T) {
 	tc := &TileChain{}
-	addr1 := loom.MustParseAddress("chain:0xb16a379ec18d4093666f8f38b11a3071c920207d")
-	ctx := contractpb.WrapPluginContext(plugin.CreateFakeContext(addr1, addr1))
-	state, err := tc.JSONtoPixelMap(payload)
-	err = ctx.Set([]byte("PixelMapState"), state)
+	state, err := tc.JSONtoPixelMap(NoPixelsPayload)
 	if err != nil {
 		t.Errorf("Error: %v", err)
+	}
+	if GetFirstColor(state) != "#444" {
+		t.Errorf("State is not expected")
+	}
+}
+
+func TestStoreAndRetrievePixelMaps(t *testing.T) {
+	tc := &TileChain{}
+	addr1 := loom.MustParseAddress("chain:0xb16a379ec18d4093666f8f38b11a3071c920207d")
+	ctx := contractpb.WrapPluginContext(plugin.CreateFakeContext(addr1, addr1))
+	PixelMaps, err := tc.JSONtoPixelMap(NoPixelsPayload)
+	err = ctx.Set([]byte("PixelMaps"), PixelMaps)
+	if err != nil {
+		t.Errorf("Error: %v", err)
+	}
+	var curState types.PixelMaps
+	err = ctx.Get([]byte("PixelMaps"), &curState)
+	if err != nil {
+		t.Errorf("Error: %v", err)
+	}
+	if curState.LinesArray[0].StartX != PixelMaps.LinesArray[0].StartX {
+		t.Errorf("Error: not deeply equal: compare: %v to: %v", curState.LinesArray, PixelMaps.LinesArray)
 	}
 }
