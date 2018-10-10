@@ -9,6 +9,7 @@ import (
 
 	"github.com/loomnetwork/go-loom/plugin"
 	contract "github.com/loomnetwork/go-loom/plugin/contractpb"
+	"github.com/pkg/errors"
 )
 
 func main() {
@@ -62,6 +63,17 @@ func (e *TileChain) SetTileMapState(ctx contract.Context, tileMapTx *types.TileM
 		fmt.Printf("Failed to emit message: %v\n", err)
 		return fmt.Errorf("emit update message: %v", err)
 	}
+
+	return nil
+}
+
+func (e *TileChain) SaveState(ctx contract.Context, tx *types.PixelMaps) error {
+	ctx.Logger().Debug(fmt.Sprintf("ctx: %v", ctx))
+	if err := ctx.Set([]byte("PixelMapState"), tx); err != nil {
+		return errors.Wrap(err, "Error marshaling state")
+	}
+	ctx.Logger().Debug("Set state")
+	ctx.EmitTopics([]byte("tilechain:savestate"))
 
 	return nil
 }

@@ -201,3 +201,6 @@ func TestStoreAndRetrievePixelMaps(t *testing.T) {
 		t.Errorf("Error: not deeply equal: compare: %v to: %v", curState.LinesArray, PixelMaps.LinesArray)
 	}
 }
+
+// TODO test from the frontend
+//TODO Add create account test
