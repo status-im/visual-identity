@@ -4,6 +4,7 @@ import {
 } from 'loom-js'
 
 import { TileMapState, TileMapTx } from './proto/dots_pb'
+import { PixelMaps } from './proto/types_pb'
 
 export default class ContractClient {
   constructor() {}
@@ -14,8 +15,11 @@ export default class ContractClient {
 
     const client = new Client(
       'default',
-      'wss://draw.status.im/websocket',
-      'wss://draw.status.im/queryws',
+      'wss://188.166.96.93:46658/websocket',
+      'wss://188.166.96.93:46658/queryws',
+
+      //'wss://draw.status.im/websocket',
+      //'wss://draw.status.im/queryws',
     )
     // required middleware
     client.txMiddleware = [
@@ -37,6 +41,12 @@ export default class ContractClient {
     const setTileMapState = new TileMapTx()
     setTileMapState.setData(data)
     await this.contract.callAsync('SetTileMapState', setTileMapState)
+  }
+
+  async setPixelMapState(data) {
+    const setPixelMapState = new PixelMaps()
+    setPixelMapState.setData(data)
+    await this.contract.callAsync('SetState', setPixelMapState)
   }
 
   async getTileMapState() {

@@ -10,6 +10,7 @@ import ContractClient from './client_contractgo';
 import Events from './chain_client/events';
 import Toaster from './components/toaster';
 import DrawingCanvas from './components/draw/DrawingCanvas';
+import { NoPixelPayload } from './test/testData';
 window['SNT'] = SNT;
 
 import './dapp.css';
@@ -41,8 +42,9 @@ class App extends React.Component {
     this.contractClient = await new ContractClient();
     this.events = new Events();
     await this.contractClient.createContract();
-    this.events.onEvent = tileData => this.tileStateUpdateHandler(tileData)
-    this.requestUpdateTilesOnCanvas();
+    await this.contractClient.setPixelMapState(NoPixelPayload)
+    //this.events.onEvent = tileData => this.tileStateUpdateHandler(tileData)
+    //this.requestUpdateTilesOnCanvas();
   }
 
   tileStateUpdateHandler = tileData => {

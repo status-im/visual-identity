@@ -21,16 +21,14 @@
     "@material-ui/icons": "^1.1.0",
     "@material-ui/lab": "^1.0.0-alpha.5",
     "axios": "^0.18.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-stage-2": "^6.24.1",
     "bignumber.js": "^5.0.0",
     "bootstrap": "^3.3.7",
-    "embark-solc": "^0.2.2",
+    "embark-solc": "^1.0.0",
     "flexboxgrid": "^6.3.1",
     "formik": "^0.11.11",
     "jquery": "^3.3.1",
     "lodash": "^4.17.11",
-    "loom-js": "^1.17.0",
+    "loom-js": "^1.27.0",
     "openzeppelin-solidity": "1.10.0",
     "react": "^16.3.2",
     "react-blockies": "^1.3.0",
@@ -43,5 +41,17 @@
     "react-toggle": "^4.0.2",
     "rlp": "^2.0.0",
     "typeface-roboto": "0.0.54"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/plugin-proposal-decorators": "^7.0.0",
+    "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
+    "@babel/plugin-proposal-function-sent": "^7.0.0",
+    "@babel/plugin-proposal-json-strings": "^7.0.0",
+    "@babel/plugin-proposal-numeric-separator": "^7.0.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-proposal-throw-expressions": "^7.0.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/plugin-syntax-import-meta": "^7.0.0"
   }
 }

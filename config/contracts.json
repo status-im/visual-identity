@@ -40,7 +40,7 @@
         "instanceOf": "MiniMeToken",
         "args": [
           "$MiniMeTokenFactory",
-          0,
+          "0x0000000000000000000000000000000000000000",
           0,
           "TestMiniMeToken",
           18,

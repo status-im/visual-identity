@@ -60,7 +60,8 @@ class DrawingCanvas extends PureComponent {
       canvasHeight: canvasHeight * 1.25,
       canvasState
     })
-    console.log({canvasState}, addPixels(canvasState.linesArray));
+    const linesArray = addPixels(canvasState.linesArray);
+    console.log({canvasState}, linesArray, JSON.stringify(linesArray, null, 2));
     this.loadState(canvasState);
   }
 
