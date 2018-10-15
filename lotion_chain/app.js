@@ -16,8 +16,8 @@ let app = lotion({
 })
 
 app.use(function(state, tx) {
-  console.log({state, tx})
-    state.count = tx.value
+  console.log({state, tx}, tx.value);
+  state.count++
 })
 
 app.start().then((info) => {

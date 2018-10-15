@@ -33,9 +33,7 @@
       "Canvas": {
         "args": ["$SNT"]
       },
-      "MiniMeTokenFactory": {
-
-      },
+      "MiniMeTokenFactory": { "deploy": false },
       "SNT": {
         "instanceOf": "MiniMeToken",
         "args": [
@@ -46,7 +44,8 @@
           18,
           "TST",
           true
-        ]
+        ],
+        "deploy": false
       }
     }
   },

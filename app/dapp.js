@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import web3 from "Embark/web3"
+import axios from 'axios';
 import EmbarkJS from 'Embark/EmbarkJS';
 import SNT from  'Embark/contracts/SNT';
 import Web3Render from './components/standard/Web3Render';
@@ -39,12 +40,28 @@ class App extends React.Component {
 
   async createContract() {
     const { tileStateUpdateHandler } = this;
-    this.contractClient = await new ContractClient();
-    this.events = new Events();
-    await this.contractClient.createContract();
-    await this.contractClient.setPixelMapState(NoPixelPayload)
+    //this.contractClient = await new ContractClient();
+    //this.events = new Events();
+    //await this.contractClient.createContract();
+    //await this.contractClient.setPixelMapState(NoPixelPayload)
     //this.events.onEvent = tileData => this.tileStateUpdateHandler(tileData)
     //this.requestUpdateTilesOnCanvas();
+
+    axios.get(`http://localhost:3000/state`)
+         .then(res => {
+           console.log({res})
+         })
+
+    axios.post('http://localhost:3000/tx', {
+      newCount: 50,
+      lastName: 'Flintstone'
+    })
+         .then(function (response) {
+           console.log(response);
+         })
+         .catch(function (error) {
+           console.log(error);
+         });
   }
 
   tileStateUpdateHandler = tileData => {
