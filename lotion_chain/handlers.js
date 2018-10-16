@@ -13,6 +13,7 @@ function setCanvasState(state, tx, canvas) {
 
 function canvasLinesHandler(state, tx){
   if(tx.canvasLines) {
+    //TODO add pricecheck
     setCanvasState(state, tx, tx.canvasLines)
   }
 }
