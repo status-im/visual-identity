@@ -4,6 +4,7 @@ import CanvasDraw from './CanvasDraw';
 import { AppBar, Toolbar, IconButton, Button } from '@material-ui/core';
 import { flatten } from 'lodash';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
+import { appendCanvasLines } from '../../actions/api';
 
 function* range(start, end) {
   const { min, max } = Math;
@@ -65,6 +66,15 @@ class DrawingCanvas extends PureComponent {
     this.loadState(canvasState);
   }
 
+  submitLine = () => {
+    const canvasState = this.saveableCanvas.getSaveData();
+    const linesArray = addPixels(canvasState.linesArray);
+    console.log({canvasState}, linesArray);
+    // need linesArray with price per pixel submitted
+    appendCanvasLines(linesArray);
+    this.loadState(canvasState);
+  }
+
   loadState = data => {
     const { canvasState } = this.state;
     this.saveableCanvas.loadSaveData(data || canvasState, false);
@@ -111,7 +121,7 @@ class DrawingCanvas extends PureComponent {
               onClick={this.zoomOut}>
               <ZoomOutIcon/>
             </IconButton>
-            <Button variant="outlined" color="primary" onClick={this.calculateCost}>Submit</Button>
+            <Button variant="outlined" color="primary" onClick={this.submitLine}>Submit</Button>
             <Button variant="outlined" color="primary" onClick={this.drawPixels}>Draw Pixels</Button>
           </Toolbar>
         </AppBar>

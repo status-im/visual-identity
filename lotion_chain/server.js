@@ -14,16 +14,15 @@ async function server (GCI) {
       ctx.body = currentState;
     }
 
-    if (ctx.request.url === '/tx') {
+    if (ctx.request.url === '/addLines') {
       //console.log(ctx);
       //console.log('body', ctx.request.body);
-      let { newCount } = ctx.request.body;
-      if (newCount) await send({ value: newCount })
+      let { canvasLines } = ctx.request.body;
+      if (canvasLines) await send({ canvasLines });
       ctx.body = await getState();
     }
 
   });
-
 
   app.listen(3000);
 

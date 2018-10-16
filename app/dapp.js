@@ -51,17 +51,6 @@ class App extends React.Component {
          .then(res => {
            console.log({res})
          })
-
-    axios.post('http://localhost:3000/tx', {
-      newCount: 50,
-      lastName: 'Flintstone'
-    })
-         .then(function (response) {
-           console.log(response);
-         })
-         .catch(function (error) {
-           console.log(error);
-         });
   }
 
   tileStateUpdateHandler = tileData => {

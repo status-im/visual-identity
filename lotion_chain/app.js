@@ -1,10 +1,10 @@
-let lotion = require('lotion');
+const lotion = require('lotion');
 const server = require('./server.js');
+const initialState = require('./initialState.js');
+const { canvasLinesHandler } = require('./handlers.js');
 
 let app = lotion({
-  initialState: {
-    count: 0
-  },
+  initialState,
   devMode: true,       // set this true to wipe blockchain data between runs
   //keyPath: './privkey.json',
   keys: 'privkey.json',
@@ -15,10 +15,7 @@ let app = lotion({
   tendermintPort: 46657 // port to use for tendermint rpc
 })
 
-app.use(function(state, tx) {
-  console.log({state, tx}, tx.value);
-  state.count++
-})
+app.use(canvasLinesHandler);
 
 app.start().then((info) => {
   console.log(info);
