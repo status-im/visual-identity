@@ -71,7 +71,7 @@ class DrawingCanvas extends PureComponent {
     const linesArray = addPixels(canvasState.linesArray);
     console.log({canvasState}, linesArray);
     // need linesArray with price per pixel submitted
-    appendCanvasLines(linesArray);
+    appendCanvasLines({ linesArray, pixelValue: 1 });
     this.loadState(canvasState);
   }
 

@@ -17,8 +17,8 @@ async function server (GCI) {
 
     if (ctx.request.url === '/addLines') {
       if (ctx.request.method === 'POST') {
-        let { canvasLines } = ctx.request.body;
-        if (canvasLines) await send({ canvasLines });
+        const tx = ctx.request.body;
+        if (tx) await send(tx);
         ctx.body = await getState();
       } else {
         ctx.body = 'OK';

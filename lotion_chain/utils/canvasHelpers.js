@@ -17,12 +17,14 @@ function getPixels (lineCoordinates) {
 
 const addPixels = linesArray => linesArray.map(line => ({ ...line, pixels: getPixels(line)}));
 
-const getCost = (plottedArray, amount) => {
+const getCost = (plottedArray, amount, pixelState = []) => {
   return plottedArray.reduce((pv, line) => {
     const { pixels } = line;
     const lineValue = pixels.reduce((pv, cv) => {
       //TODO will have to check price of pixel and see if amount is greater.
       const [x , y] = cv;
+      const existingPixel = pixelState[cv];
+      if (existingPixel && existingPixel.value > amount) return pv + existingPixel.value;
       return pv + amount;
     }, 0);
     return pv + lineValue;
@@ -31,5 +33,6 @@ const getCost = (plottedArray, amount) => {
 
 module.exports = {
   addPixels,
-  getPixels
+  getPixels,
+  getCost
 }
