@@ -5,6 +5,8 @@ import { AppBar, Toolbar, IconButton, Button } from '@material-ui/core';
 import { flatten } from 'lodash';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import { appendCanvasLines } from '../../actions/api';
+import { CryptoUtils } from 'loom-js';
+import { createKeyPair } from '../../utils/sidechain';
 
 function* range(start, end) {
   const { min, max } = Math;
@@ -51,6 +53,10 @@ class DrawingCanvas extends PureComponent {
     canvasWidth: 350,
     canvasHeight: 350,
     disabled: false
+  }
+
+  createAccount = async () => {
+    console.log(await createKeyPair())
   }
 
   zoomOut = () => {
@@ -123,6 +129,7 @@ class DrawingCanvas extends PureComponent {
             </IconButton>
             <Button variant="outlined" color="primary" onClick={this.submitLine}>Submit</Button>
             <Button variant="outlined" color="primary" onClick={this.drawPixels}>Draw Pixels</Button>
+            <Button variant="outlined" color="primary" onClick={this.createAccount}>Create Account</Button>
           </Toolbar>
         </AppBar>
         <CanvasDraw

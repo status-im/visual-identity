@@ -3,5 +3,6 @@
 
 module.exports = {
   pixels: {},
-  canvasLines: []
+  canvasLines: [],
+  accounts: {}
 }
