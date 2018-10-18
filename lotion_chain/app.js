@@ -1,7 +1,7 @@
 const lotion = require('lotion');
 const server = require('./server.js');
 const initialState = require('./initialState.js');
-const { canvasLinesHandler } = require('./handlers.js');
+const { rootHandler } = require('./handlers.js');
 
 let app = lotion({
   initialState,
@@ -15,7 +15,7 @@ let app = lotion({
   tendermintPort: 46657 // port to use for tendermint rpc
 })
 
-app.use(canvasLinesHandler);
+app.use(rootHandler);
 
 app.start().then((info) => {
   console.log(info);

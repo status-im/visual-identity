@@ -1,8 +1,8 @@
 const { addPixels, getPixels, getCost } = require('./utils/canvasHelpers.js');
 
-function setCanvasState(state, tx, canvas) {
-  const { pixelValue } = tx;
-  canvas.forEach(line => {
+function setCanvasState(state, tx) {
+  const { pixelValue, linesArray } = tx;
+  linesArray.forEach(line => {
     const pixels = getPixels(line);
     pixels.forEach(pixel => {
       state.pixels[pixel] = { ...line, pixelValue };
@@ -25,6 +25,19 @@ function canvasLinesHandler(state, tx){
   }
 }
 
+function rootHandler(state, tx) {
+  switch(tx.type) {
+  case 'PURCHASE':
+    canvasLinesHandler(state, tx)
+    break;
+  case 'NEW_ACCOUNT':
+    //
+    break;
+  default:
+    break;
+  }
+}
+
 module.exports = {
-  canvasLinesHandler
+  rootHandler
 }
