@@ -24,6 +24,7 @@
     "bignumber.js": "^5.0.0",
     "bootstrap": "^3.3.7",
     "embark-solc": "^1.0.0",
+    "ethereumjs-util": "^6.0.0",
     "flexboxgrid": "^6.3.1",
     "formik": "^0.11.11",
     "jquery": "^3.3.1",
