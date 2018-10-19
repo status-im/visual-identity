@@ -4,7 +4,7 @@ import CanvasDraw from './CanvasDraw';
 import { AppBar, Toolbar, IconButton, Button } from '@material-ui/core';
 import { flatten } from 'lodash';
 import ZoomOutIcon from '@material-ui/icons/ZoomOut';
-import { appendCanvasLines } from '../../actions/api';
+import { appendCanvasLines, createSideChainAccount } from '../../actions/api';
 import { CryptoUtils } from 'loom-js';
 import { createKeyPair } from '../../utils/sidechain';
 
@@ -56,7 +56,9 @@ class DrawingCanvas extends PureComponent {
   }
 
   createAccount = async () => {
-    console.log(await createKeyPair())
+    const generatedKeysPayload = await createKeyPair();
+    console.log(generatedKeysPayload);
+    createSideChainAccount(generatedKeysPayload);
   }
 
   zoomOut = () => {

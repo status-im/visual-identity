@@ -2,6 +2,7 @@ const { connect } = require('lotion');
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const compress = require('koa-compress');
+const { verifySignedMessage, createSideChainAccount } = require('./utils/signing.js');
 
 const app = new Koa();
 app.use(bodyParser());
@@ -24,6 +25,19 @@ async function server (GCI) {
         ctx.body = 'OK';
       }
     }
+
+    if (ctx.request.url === '/newAccount') {
+      if (ctx.request.method === 'POST') {
+        const tx = ctx.request.body;
+        const validSignature = verifySignedMessage(tx.proofOfOwnership)
+        console.log(validSignature);
+        //if (tx) await send(tx);
+        ctx.body = `validSignature: ${validSignature}`;
+      } else {
+        ctx.body = 'OK';
+      }
+    }
+
   });
 
   app.listen(3000);

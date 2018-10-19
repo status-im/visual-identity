@@ -8,11 +8,11 @@ const {
   pubToAddress
 } = require('ethereumjs-util');
 
-export function stripHexPrefix(value) {
+function stripHexPrefix(value) {
   return value.replace('0x', '');
 }
 
-export function stripHexPrefixAndLower(value) {
+function stripHexPrefixAndLower(value) {
   return stripHexPrefix(value).toLowerCase();
 }
 
@@ -27,4 +27,8 @@ function verifySignedMessage({ address, msg, sig, version }) {
   const pubKey = ecrecover(hash, sigb[64], sigb.slice(0, 32), sigb.slice(32, 64));
 
   return stripHexPrefixAndLower(address) === pubToAddress(pubKey).toString('hex');
+}
+
+module.exports = {
+  verifySignedMessage
 }
