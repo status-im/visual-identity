@@ -29,10 +29,9 @@ async function server (GCI) {
     if (ctx.request.url === '/newAccount') {
       if (ctx.request.method === 'POST') {
         const tx = ctx.request.body;
-        const validSignature = verifySignedMessage(tx.proofOfOwnership)
-        console.log(validSignature);
-        //if (tx) await send(tx);
-        ctx.body = `validSignature: ${validSignature}`;
+        //TODO create chain handler
+        if (tx) await send(tx);
+        ctx.body = 'OK';
       } else {
         ctx.body = 'OK';
       }

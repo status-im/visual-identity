@@ -1,4 +1,5 @@
 const { addPixels, getPixels, getCost } = require('./utils/canvasHelpers.js');
+const { verifySignedMessage } = require('./utils/signing.js');
 
 function setCanvasState(state, tx) {
   const { pixelValue, linesArray } = tx;
@@ -25,12 +26,21 @@ function canvasLinesHandler(state, tx){
   }
 }
 
+function createAccountHandler(state, tx) {
+  const { proofOfOwnership } = tx;
+  const { msg } = proofOfOwnership;
+  if (proofOfOwnership && verifySignedMessage(proofOfOwnership)) {
+    console.log(proofOfOwnership)
+    state.accounts[msg] = { proofOfOwnership };
+  }
+}
+
 function rootHandler(state, tx) {
   switch(tx.type) {
   case 'PURCHASE':
     canvasLinesHandler(state, tx)
     break;
-  case 'NEW_ACCOUNT':
+  case 'CREATE_ACCOUNT':
     //
     break;
   default:

@@ -7,6 +7,7 @@ import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import { appendCanvasLines, createSideChainAccount } from '../../actions/api';
 import { CryptoUtils } from 'loom-js';
 import { createKeyPair } from '../../utils/sidechain';
+import { storeKeyData, getLatestKeyData, getSideChainPrivateKey, getLatestKeyNonce } from '../../utils/storage';
 
 function* range(start, end) {
   const { min, max } = Math;
@@ -56,9 +57,12 @@ class DrawingCanvas extends PureComponent {
   }
 
   createAccount = async () => {
-    const generatedKeysPayload = await createKeyPair();
-    console.log(generatedKeysPayload);
-    createSideChainAccount(generatedKeysPayload);
+    const nonce = await getLatestKeyNonce();
+    const generatedKeysInfo = await createKeyPair(nonce);
+    console.log(generatedKeysInfo);
+    createSideChainAccount(generatedKeysInfo);
+    storeKeyData(generatedKeysInfo)
+
   }
 
   zoomOut = () => {
