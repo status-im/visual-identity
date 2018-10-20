@@ -1,16 +1,14 @@
 import nacl from 'tweetnacl';
-import naclUtil from 'tweetnacl-util';
 import { stringify } from 'deterministic-json';
 import { cloneDeep } from 'lodash';
+import { calculateHash, arrayToString } from './nacl';
 
-// https://github.com/dchest/tweetnacl-js/blob/gh-pages/app.js#L399
-const calculateHash = message => naclUtil.encodeBase64(nacl.hash(naclUtil.decodeUTF8(message)));
-
-export default function getSigHash (originalTx) {
-  const tx = cloneDeep(originalTx);
+// Object -> Uint8Array || String
+export default function getSigHash (originalTx, asString = false) {
+  const tx = cloneDeep(originalTx)
 
   // stringify tx deterministically (and convert buffers to strings)
   // then return sha256 hash of that
   let txString = stringify(tx)
-  return calculateHash(txString)
+  return asString ? arrayToString(calculateHash(txString)) : calculateHash(txString)
 }

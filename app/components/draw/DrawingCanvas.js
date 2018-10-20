@@ -8,6 +8,8 @@ import { appendCanvasLines, createSideChainAccount } from '../../actions/api';
 import { CryptoUtils } from 'loom-js';
 import { createKeyPair } from '../../utils/sidechain';
 import { storeKeyData, getLatestKeyData, getSideChainPrivateKey, getLatestKeyNonce } from '../../utils/storage';
+import sigHash from '../../utils/sigHash';
+import { createTransaction } from '../../utils/transaction';
 
 function* range(start, end) {
   const { min, max } = Math;
@@ -78,12 +80,14 @@ class DrawingCanvas extends PureComponent {
     this.loadState(canvasState);
   }
 
-  submitLine = () => {
+  submitLine = async () => {
     const canvasState = this.saveableCanvas.getSaveData();
     const linesArray = addPixels(canvasState.linesArray);
-    console.log({canvasState}, linesArray);
     // need linesArray with price per pixel submitted
-    appendCanvasLines({ linesArray, pixelValue: 1 });
+    const tx = { linesArray, pixelValue: 1 };
+    console.log({canvasState}, linesArray, 'sighash:', sigHash(tx, true), await createTransaction(tx));
+
+    appendCanvasLines(tx);
     this.loadState(canvasState);
   }
 
