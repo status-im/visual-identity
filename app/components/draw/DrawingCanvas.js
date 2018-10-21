@@ -59,8 +59,8 @@ class DrawingCanvas extends PureComponent {
   }
 
   createAccount = async () => {
-    const nonce = await getLatestKeyNonce();
-    const generatedKeysInfo = await createKeyPair(nonce);
+    //const nonce = await getLatestKeyNonce();
+    const generatedKeysInfo = await createKeyPair();
     console.log(generatedKeysInfo);
     createSideChainAccount(generatedKeysInfo);
     storeKeyData(generatedKeysInfo)
@@ -85,9 +85,10 @@ class DrawingCanvas extends PureComponent {
     const linesArray = addPixels(canvasState.linesArray);
     // need linesArray with price per pixel submitted
     const tx = { linesArray, pixelValue: 1 };
-    console.log({canvasState}, linesArray, 'sighash:', sigHash(tx, true), await createTransaction(tx));
+    const transaction = await createTransaction(tx);
+    console.log({canvasState, transaction}, linesArray, 'sighash:', sigHash(tx, true));
 
-    appendCanvasLines(tx);
+    appendCanvasLines(transaction);
     this.loadState(canvasState);
   }
 

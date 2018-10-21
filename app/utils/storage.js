@@ -2,7 +2,13 @@ import Dexie from 'dexie';
 
 const db = new Dexie('visual-identity');
 db.version(1).stores({
-  sidechainKeyData: `++id,publicKey,privateKey,proofOfOwnership`
+  sidechainKeyData: `++id,publicKey,privateKey,proofOfOwnership`,
+  transactionsNonce: `nonce`
+});
+
+db.on("populate", function() {
+  // Init DB with initial values:
+  db.transactionsNonce.add({ nonce: 1 });
 });
 
 export const storeKeyData =  async data => {
@@ -24,7 +30,22 @@ export const getSideChainPrivateKey = async () => {
   return data['privateKey']
 }
 
+export const getSideChainPublicKey = async () => {
+  const data = await getLatestKeyData();
+  return data['publicKey']
+}
+
 export const getLatestKeyNonce = async () => {
   const data = await getLatestKeyData();
   return data['id'];
+}
+
+export const getTransactionsNonce = async () => {
+  return await db.transactionsNonce.get(1);
+}
+
+export const incrementTransactionsNonce = async () => {
+  db.transactionsNonce.toCollection().modify(function(record) {
+    record.nonce += 1;
+  });
 }
