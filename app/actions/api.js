@@ -3,7 +3,9 @@ import axios from 'axios';
 const BASE_URL = 'localhost:3000';
 export const appendCanvasLines = tx => {
   const type = 'PURCHASE';
-  axios.post(`http://${BASE_URL}/addLines`, { ...tx, type })
+  const payload = { ...tx, type };
+  console.log({payload});
+  axios.post(`http://${BASE_URL}/addLines`, payload)
     .then(function (response) {
       console.log(response);
     })

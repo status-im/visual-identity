@@ -7,18 +7,20 @@ import { stringToArray, arrayToString, jsonToArray } from './nacl';
 
 export const createTransaction = async data => {
   const nonce = await getTransactionsNonce();
+  const publicKey = await getSideChainPublicKey();
   let tx = {
     nonce,
     data,
+    publicKey
   }
 
   const txString = stringify(tx);
   const message = jsonToArray(txString);
   const privateKey = stringToArray(await getSideChainPrivateKey());
-  const publicKey = stringToArray(await getSideChainPublicKey());
+  const arrayPublicKey = stringToArray(publicKey)
   const sig = nacl.sign.detached(message, privateKey);
   tx.sig = arrayToString(sig);
-  const verified = nacl.sign.detached.verify(message, sig, publicKey);
+  const verified = nacl.sign.detached.verify(message, sig, arrayPublicKey);
   return verified && tx;
 }
 

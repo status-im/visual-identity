@@ -2,7 +2,7 @@ const { connect } = require('lotion');
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const compress = require('koa-compress');
-const { verifySignedMessage, createSideChainAccount } = require('./utils/signing.js');
+const { verifySignedMessage, verifySignedTx, createSideChainAccount } = require('./utils/signing.js');
 
 const app = new Koa();
 app.use(bodyParser());
@@ -19,6 +19,8 @@ async function server (GCI) {
     if (ctx.request.url === '/addLines') {
       if (ctx.request.method === 'POST') {
         const tx = ctx.request.body;
+        const verified = verifySignedTx(tx);
+        console.log({verified})
         if (tx) await send(tx);
         ctx.body = await getState();
       } else {
