@@ -1,8 +1,8 @@
 const { addPixels, getPixels, getCost } = require('./utils/canvasHelpers.js');
-const { verifySignedMessage } = require('./utils/signing.js');
+const { verifySignedTx, verifySignedMessage } = require('./utils/signing.js');
 
 function setCanvasState(state, tx) {
-  const { pixelValue, linesArray } = tx;
+  const { pixelValue, linesArray } = tx.data;
   linesArray.forEach(line => {
     const pixels = getPixels(line);
     pixels.forEach(pixel => {
@@ -13,16 +13,18 @@ function setCanvasState(state, tx) {
 }
 
 function canPurchase(state, tx) {
-  const requiredCost = getCost(tx.linesArray, tx.pixelValue, state.pixels);
-  const proposedCost = getCost(tx.linesArray, tx.pixelValue);
+  const { linesArray, pixelValue } = tx.data;
+  const requiredCost = getCost(linesArray, pixelValue, state.pixels);
+  const proposedCost = getCost(linesArray, pixelValue);
   return proposedCost >= requiredCost;
 }
 
 function canvasLinesHandler(state, tx){
-  //TODO add checks for account
-  if(tx.linesArray) {
+  const verified = verifySignedTx(tx);
+  if (!verified) return;
+  if (tx.data.linesArray) {
     if (!canPurchase(state, tx)) return;
-    setCanvasState(state, tx, tx.linesArray);
+    setCanvasState(state, tx);
   }
 }
 

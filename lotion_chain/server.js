@@ -19,10 +19,12 @@ async function server (GCI) {
     if (ctx.request.url === '/addLines') {
       if (ctx.request.method === 'POST') {
         const tx = ctx.request.body;
-        const verified = verifySignedTx(tx);
-        console.log({verified})
-        if (tx) await send(tx);
-        ctx.body = await getState();
+        if (tx) {
+          const result = await send(tx);
+          ctx.body = result;
+        } else {
+          ctx.body = 'No TX Supplied';
+        }
       } else {
         ctx.body = 'OK';
       }

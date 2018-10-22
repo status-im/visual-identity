@@ -7,6 +7,12 @@ export const appendCanvasLines = tx => {
   console.log({payload});
   axios.post(`http://${BASE_URL}/addLines`, payload)
     .then(function (response) {
+      const { data: { check_tx } } = response
+      if (check_tx.code) {
+        console.log('error_found:', check_tx)
+      } else {
+        console.log('tx sucessful:', response)
+      }
       console.log(response);
     })
     .catch(function (error) {

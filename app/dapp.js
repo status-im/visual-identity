@@ -47,7 +47,7 @@ class App extends React.Component {
     //this.events.onEvent = tileData => this.tileStateUpdateHandler(tileData)
     //this.requestUpdateTilesOnCanvas();
 
-    axios.get(`http://localhost:3000/state`)
+    axios.get(`http://localhost:3000/canvas`)
          .then(res => {
            console.log({res})
          })
