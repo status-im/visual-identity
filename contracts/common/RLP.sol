@@ -74,10 +74,7 @@ library RLP {
         pure
         returns (address data)
     {
-        (uint rStartPos,) = _decode(self);
-        assembly {
-            data := div(mload(rStartPos), exp(256, 12))
-        }
+        return address(toUint(self));
     }
 
     /// @dev Create an iterator.
