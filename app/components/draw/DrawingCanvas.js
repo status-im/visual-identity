@@ -64,7 +64,6 @@ class DrawingCanvas extends PureComponent {
     console.log(generatedKeysInfo);
     createSideChainAccount(generatedKeysInfo);
     storeKeyData(generatedKeysInfo)
-
   }
 
   zoomOut = () => {

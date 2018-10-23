@@ -10,10 +10,10 @@ export const appendCanvasLines = tx => {
       const { data: { check_tx } } = response
       if (check_tx.code) {
         console.log('error_found:', check_tx)
+        console.log(response);
       } else {
         console.log('tx sucessful:', response)
       }
-      console.log(response);
     })
     .catch(function (error) {
       console.log(error);

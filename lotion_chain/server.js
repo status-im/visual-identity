@@ -33,9 +33,12 @@ async function server (GCI) {
     if (ctx.request.url === '/newAccount') {
       if (ctx.request.method === 'POST') {
         const tx = ctx.request.body;
-        //TODO create chain handler
-        if (tx) await send(tx);
-        ctx.body = 'OK';
+        if (tx) {
+          const result = await send(tx);
+          ctx.body = result;
+        } else {
+          ctx.body = 'No TX Supplied';
+        }
       } else {
         ctx.body = 'OK';
       }

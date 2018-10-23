@@ -4,5 +4,7 @@
 module.exports = {
   pixels: {},
   canvasLines: [],
-  accounts: {}
+  accounts: {},
+  balances: {},
+  taxEscrow: {}
 }
