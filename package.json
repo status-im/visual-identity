@@ -24,7 +24,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-stage-2": "^6.24.1",
     "bignumber.js": "^5.0.0",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^3.4.1",
     "embark-solc": "^0.2.2",
     "flexboxgrid": "^6.3.1",
     "formik": "^0.11.11",
