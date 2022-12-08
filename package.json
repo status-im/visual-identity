@@ -38,7 +38,7 @@
     "react-color": "^2.14.1",
     "react-dom": "^16.3.2",
     "react-dropzone": "^4.2.13",
-    "react-sketch": "^0.4.4",
+    "react-sketch": "^0.5.1",
     "react-toggle": "^4.0.2",
     "rlp": "^2.0.0",
     "typeface-roboto": "0.0.54"
